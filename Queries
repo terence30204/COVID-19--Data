@@ -50,7 +50,7 @@ DELETE FROM `country` WHERE `country`.`Name` = 'Timor-Leste';
 
 DROP TABLE country
 
-#new version of table labelled country
+--new version of table labelled country
 
 CREATE TABLE country(
     Name varchar(50) PRIMARY KEY,
@@ -68,12 +68,50 @@ CREATE TABLE country(
 	FOREIGN KEY (Region) REFERENCES region(Name)     
 	);
 
-#import data from WHO into table 'country'
+--import data from WHO into table 'country'
+
 INSERT INTO `country` VALUES ('Name', 'WHO Region', 'Cases - cumulative total', 'Cases - cumulative total per 100000 population',
       'Cases - newly reported in last 7 days', 'Cases - newly reported in last 7 days per 100000 population',
       'Cases - newly reported in last 24 hours', 'Deaths - cumulative total', 'Deaths - cumulative total per 100000 population',
       'Deaths - newly reported in last 7 days', 'Deaths - newly reported in last 7 days per 100000 population', 'Deaths - newly reported in last 24 hours')
 
+--read data 
 
+SELECT name FROM country
+  WHERE region = 'Americas'
+
+SELECT name FROM country
+  WHERE region = 'Europe'
+
+SELECT name FROM country
+  WHERE region = 'Africa'
+  
+SELECT country.Name as 'Name of Country', total_cases AS 'Total (Country)', cumulative_cases AS 'Total (Americas)'
+  FROM country JOIN region ON country.Region = region.Name
+  WHERE country.Region = 'Americas'
+  
+SELECT country.Name as 'Name of Country', total_cases AS 'Total (Country)', cumulative_cases AS 'Total (Americas)'
+  FROM country JOIN region ON country.Region = region.Name
+  WHERE country.Region = 'Western Pacific'
+
+SELECT name AS 'Country Name', total_cases AS 'Total Cases',
+  CASE WHEN total_cases < 1000000 THEN 'Low'
+  	   WHEN total_cases BETWEEN 1000000 AND 10000000 THEN 'Medium'
+       ELSE 'High'
+  END AS 'Low/Medium/High'
+  from country 
+  
+SELECT name AS 'Country Name', total_cases AS 'Total Cases',
+  CASE WHEN total_cases < 1000000 THEN 'Low'
+  	   WHEN total_cases BETWEEN 1000000 AND 10000000 THEN 'Medium'
+       ELSE 'High'
+  END AS 'Low/Medium/High'
+  from country WHERE region = 'Eastern Mediterranean'
+  
+  
+ALTER TABLE region MODIFY COLUMN Cumulative_Cases INT --changed from varchar(50) to INT
+SELECT country.name AS 'Country', country.Region AS Region, round(country.Total_Cases/region.cumulative_cases*100, 5) AS 'Percentage of Cases in Region'
+  FROM country JOIN region ON country.Region = region.Name 
+  WHERE country.Region = 'Americas'
 
 
