@@ -35,3 +35,45 @@ INSERT INTO country VALUES('Maldives', 'South-East Asia', '82,099', '120', '227'
 INSERT INTO country VALUES('Timor-Leste', '17,698', '80', '82', '2');
 INSERT INTO country VALUES('Bhutan', 'South-East Asia', '2596', '0', '3', '0');
 INSERT INTO country VALUES('DPRK', 'South-East Asia', '0','0','0','0')
+
+DELETE FROM `country` WHERE `country`.`Name` = 'Bangladesh';
+DELETE FROM `country` WHERE `country`.`Name` = 'Bhutan';
+DELETE FROM `country` WHERE `country`.`Name` = 'DPRK';
+DELETE FROM `country` WHERE `country`.`Name` = 'India';
+DELETE FROM `country` WHERE `country`.`Name` = 'Indonesia';
+DELETE FROM `country` WHERE `country`.`Name` = 'Maldives';
+DELETE FROM `country` WHERE `country`.`Name` = 'Myanmar';
+DELETE FROM `country` WHERE `country`.`Name` = 'Nepal';
+DELETE FROM `country` WHERE `country`.`Name` = 'Sri Lanka';
+DELETE FROM `country` WHERE `country`.`Name` = 'Thailand';
+DELETE FROM `country` WHERE `country`.`Name` = 'Timor-Leste';
+
+DROP TABLE country
+
+#new version of table labelled country
+
+CREATE TABLE country(
+    Name varchar(50) PRIMARY KEY,
+    Region varchar(50),
+    Total_Cases INT,
+    Total_Cases_per_100000 FLOAT(10,2),
+    New_Cases_7days INT,
+    New_Cases_7days_per_100000 FLOAT(10,2),
+    New_Cases_24hrs INT,
+    Total_Deaths INT,
+    Total_Deaths_per_100000 FLOAT(10,2),
+    Deaths_7days INT,
+    Deaths_7days_per_100000 FLOAT(10,2),
+    Deaths_24hrs INT,
+	FOREIGN KEY (Region) REFERENCES region(Name)     
+	);
+
+#import data from WHO into table 'country'
+INSERT INTO `country` VALUES ('Name', 'WHO Region', 'Cases - cumulative total', 'Cases - cumulative total per 100000 population',
+      'Cases - newly reported in last 7 days', 'Cases - newly reported in last 7 days per 100000 population',
+      'Cases - newly reported in last 24 hours', 'Deaths - cumulative total', 'Deaths - cumulative total per 100000 population',
+      'Deaths - newly reported in last 7 days', 'Deaths - newly reported in last 7 days per 100000 population', 'Deaths - newly reported in last 24 hours')
+
+
+
+
