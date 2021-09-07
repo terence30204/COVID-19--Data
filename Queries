@@ -1,0 +1,37 @@
+CREATE TABLE Region( 
+Continent_or_Area varchar(50) PRIMARY KEY,
+Cumulative_Cases varchar(50),
+New_Cases varchar(50),
+Cumulative_Deaths varchar(50),
+New_Deaths int 
+)
+ALTER TABLE region CHANGE Continent_or_Area Name varchar(50)
+
+CREATE TABLE Country( 
+Name varchar(50) PRIMARY KEY,
+Continent varchar(50), 
+Total_Cases varchar(50), 
+New_Cases varchar(50), 
+Total_Deaths varchar(50), 
+New_Deaths varchar(50), 
+FOREIGN KEY (Continent) REFERENCES region(Name) 
+)
+
+INSERT INTO region VALUES('Americas', '85,254,112', '197,082', '2,125,549', 3047);
+INSERT INTO region VALUES('Europe', '66,154,347', '124,388', '1,284,177', 1612);
+INSERT INTO region VALUES('South-East Asia', '41,715,826', '53,496', '654,370', 1380);
+INSERT INTO region VALUES('Eastern Mediterranean', '14,975,204', '52,193', '273,187', 989);
+INSERT INTO region VALUES('Western Pacific', '7,076,430', '69,548', '96,095', 799);
+INSERT INTO region VALUES('Africa', '5,728,155', '9487', '137,555', 579)
+
+INSERT INTO country VALUES('India', 'South-East Asia', '33,027,621', '38,948', '440,752', 219);
+INSERT INTO country VALUES('Indonesia', 'South-East Asia', '4,133,433', '4413', '136,473', 612);
+INSERT INTO country VALUES('Bangladesh', 'South-East Asia', '1,517,166', '2710', '26,628', 65);
+INSERT INTO country VALUES('Thailand', 'South-East Asia', '1,280,534', '0', '13,042', 187);
+INSERT INTO country VALUES('Nepal', 'South-East Asia', '770,759', '1488', '10,858', 20);
+INSERT INTO country VALUES('Sri Lanka', 'South-East Asia', '465,949', '3182', '10,320', 180);
+INSERT INTO country VALUES('Myanmar', 'South-East Asia', '417,971', '2555', '15,985', 94);
+INSERT INTO country VALUES('Maldives', 'South-East Asia', '82,099', '120', '227', '1');
+INSERT INTO country VALUES('Timor-Leste', '17,698', '80', '82', '2');
+INSERT INTO country VALUES('Bhutan', 'South-East Asia', '2596', '0', '3', '0');
+INSERT INTO country VALUES('DPRK', 'South-East Asia', '0','0','0','0')
