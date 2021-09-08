@@ -90,7 +90,7 @@ SELECT country.Name as 'Name of Country', total_cases AS 'Total (Country)', cumu
   FROM country JOIN region ON country.Region = region.Name
   WHERE country.Region = 'Americas'
   
-SELECT country.Name as 'Name of Country', total_cases AS 'Total (Country)', cumulative_cases AS 'Total (Americas)'
+SELECT country.Name as 'Name of Country', total_cases AS 'Total (Country)', cumulative_cases AS 'Total (Western Pacific)'
   FROM country JOIN region ON country.Region = region.Name
   WHERE country.Region = 'Western Pacific'
 
