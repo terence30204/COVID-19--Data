@@ -24,29 +24,14 @@ INSERT INTO region VALUES('Eastern Mediterranean', '14,975,204', '52,193', '273,
 INSERT INTO region VALUES('Western Pacific', '7,076,430', '69,548', '96,095', 799);
 INSERT INTO region VALUES('Africa', '5,728,155', '9487', '137,555', 579)
 
-INSERT INTO country VALUES('India', 'South-East Asia', '33,027,621', '38,948', '440,752', 219);
-INSERT INTO country VALUES('Indonesia', 'South-East Asia', '4,133,433', '4413', '136,473', 612);
-INSERT INTO country VALUES('Bangladesh', 'South-East Asia', '1,517,166', '2710', '26,628', 65);
-INSERT INTO country VALUES('Thailand', 'South-East Asia', '1,280,534', '0', '13,042', 187);
-INSERT INTO country VALUES('Nepal', 'South-East Asia', '770,759', '1488', '10,858', 20);
-INSERT INTO country VALUES('Sri Lanka', 'South-East Asia', '465,949', '3182', '10,320', 180);
-INSERT INTO country VALUES('Myanmar', 'South-East Asia', '417,971', '2555', '15,985', 94);
-INSERT INTO country VALUES('Maldives', 'South-East Asia', '82,099', '120', '227', '1');
-INSERT INTO country VALUES('Timor-Leste', '17,698', '80', '82', '2');
-INSERT INTO country VALUES('Bhutan', 'South-East Asia', '2596', '0', '3', '0');
-INSERT INTO country VALUES('DPRK', 'South-East Asia', '0','0','0','0')
+ALTER TABLE region MODIFY COLUMN Cumulative_Deaths INT
 
-DELETE FROM `country` WHERE `country`.`Name` = 'Bangladesh';
-DELETE FROM `country` WHERE `country`.`Name` = 'Bhutan';
-DELETE FROM `country` WHERE `country`.`Name` = 'DPRK';
-DELETE FROM `country` WHERE `country`.`Name` = 'India';
-DELETE FROM `country` WHERE `country`.`Name` = 'Indonesia';
-DELETE FROM `country` WHERE `country`.`Name` = 'Maldives';
-DELETE FROM `country` WHERE `country`.`Name` = 'Myanmar';
-DELETE FROM `country` WHERE `country`.`Name` = 'Nepal';
-DELETE FROM `country` WHERE `country`.`Name` = 'Sri Lanka';
-DELETE FROM `country` WHERE `country`.`Name` = 'Thailand';
-DELETE FROM `country` WHERE `country`.`Name` = 'Timor-Leste';
+UPDATE `region` SET `Cumulative_Deaths` = '137555' WHERE `region`.`Name` = 'Africa'; 
+UPDATE `region` SET `Cumulative_Deaths` = '2125549' WHERE `region`.`Name` = 'Americas'; 
+UPDATE `region` SET `Cumulative_Deaths` = '273187' WHERE `region`.`Name` = 'Eastern Mediterranean'; 
+UPDATE `region` SET `Cumulative_Deaths` = '1284177' WHERE `region`.`Name` = 'Europe'; 
+UPDATE `region` SET `Cumulative_Deaths` = '654370' WHERE `region`.`Name` = 'South-East Asia'; 
+UPDATE `region` SET `Cumulative_Deaths` = '96095' WHERE `region`.`Name` = 'Western Pacific';
 
 DROP TABLE country
 
@@ -65,8 +50,8 @@ CREATE TABLE country(
     Deaths_7days INT,
     Deaths_7days_per_100000 FLOAT(10,2),
     Deaths_24hrs INT,
-	FOREIGN KEY (Region) REFERENCES region(Name)     
-	);
+    FOREIGN KEY (Region) REFERENCES region(Name)     
+    );
 
 --import data from WHO into table 'country'
 
@@ -74,25 +59,27 @@ INSERT INTO `country` VALUES ('Name', 'WHO Region', 'Cases - cumulative total', 
       'Cases - newly reported in last 7 days', 'Cases - newly reported in last 7 days per 100000 population',
       'Cases - newly reported in last 24 hours', 'Deaths - cumulative total', 'Deaths - cumulative total per 100000 population',
       'Deaths - newly reported in last 7 days', 'Deaths - newly reported in last 7 days per 100000 population', 'Deaths - newly reported in last 24 hours')
+      
+ALTER TABLE country CHANGE COLUMN country.Region Continent varchar(50)
 
 --read data 
 
 SELECT name FROM country
-  WHERE region = 'Americas'
+  WHERE continent = 'Americas'
 
 SELECT name FROM country
-  WHERE region = 'Europe'
+  WHERE continent = 'Europe' or continent = 'Africa'
 
 SELECT name FROM country
-  WHERE region = 'Africa'
+  WHERE continent = 'Africa'
   
 SELECT country.Name as 'Name of Country', total_cases AS 'Total (Country)', cumulative_cases AS 'Total (Americas)'
-  FROM country JOIN region ON country.Region = region.Name
-  WHERE country.Region = 'Americas'
+  FROM country JOIN region ON country.continent = region.Name
+  WHERE country.continent = 'Americas'
   
 SELECT country.Name as 'Name of Country', total_cases AS 'Total (Country)', cumulative_cases AS 'Total (Western Pacific)'
-  FROM country JOIN region ON country.Region = region.Name
-  WHERE country.Region = 'Western Pacific'
+  FROM country JOIN region ON country.continent = region.Name
+  WHERE country.continent = 'Western Pacific'
 
 SELECT name AS 'Country Name', total_cases AS 'Total Cases',
   CASE WHEN total_cases < 1000000 THEN 'Low'
@@ -106,12 +93,19 @@ SELECT name AS 'Country Name', total_cases AS 'Total Cases',
   	   WHEN total_cases BETWEEN 1000000 AND 10000000 THEN 'Medium'
        ELSE 'High'
   END AS 'Low/Medium/High'
-  from country WHERE region = 'Eastern Mediterranean'
+  from country WHERE continent = 'Eastern Mediterranean'
   
   
-ALTER TABLE region MODIFY COLUMN Cumulative_Cases INT --changed from varchar(50) to INT
-SELECT country.name AS 'Country', country.Region AS Region, round(country.Total_Cases/region.cumulative_cases*100, 5) AS 'Percentage of Cases in Region'
-  FROM country JOIN region ON country.Region = region.Name 
-  WHERE country.Region = 'Americas'
+ALTER TABLE region MODIFY COLUMN Cumulative_Cases INT 
+--column changed from varchar(50) to INT
 
+SELECT country.name AS 'Country', country.continent AS continent, round(country.Total_Cases/region.cumulative_cases*100, 5) AS 'Percentage of Cases in Region'
+  FROM country JOIN region ON country.continent = region.Name 
+  WHERE country.continent = 'Americas'
+
+SELECT name, total_deaths FROM country WHERE continent = 'Europe'
+
+SELECT country.Name, total_deaths, cumulative_deaths, round(total_deaths/cumulative_deaths*100, 5) AS 'Percentage of Deaths in Region'
+  FROM country JOIN region ON region.Name = country.Continent
+  WHERE continent = 'South-East Asia' OR continent = 'Americas'
 
